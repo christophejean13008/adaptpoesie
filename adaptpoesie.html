@@ -126,8 +126,13 @@ textarea{width:100%;min-height:230px;padding:12px;border:1.5px solid #C6D2E8;bor
 .etape{flex:0 0 auto;padding:10px 15px;border-radius:10px;border:1.5px solid #C6D2E8;background:#fff;
        font-size:14px;font-weight:600;min-height:44px;color:var(--encre-doux)}
 .etape[aria-pressed="true"]{background:var(--miel);border-color:var(--miel);color:#fff}
-.consigne{background:#FFF9EC;border-left:4px solid var(--miel);padding:11px 13px;border-radius:0 10px 10px 0;
-          font-size:15px;margin-bottom:12px}
+.consigne{background:#FFF9EC;border-left:4px solid var(--miel);padding:9px 13px;border-radius:0 10px 10px 0;
+          font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.hp{flex:0 0 auto;width:46px;height:46px;border-radius:12px;border:1.5px solid var(--miel);
+    background:#fff;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center}
+.hp:active{transform:translateY(1px)}
+.hp.parle{background:var(--miel);border-color:var(--miel)}
+.hp:focus-visible{outline:3px solid var(--plume);outline-offset:2px}
 .score{display:flex;gap:14px;align-items:center;font-size:14px;color:var(--encre-doux);margin-top:12px;flex-wrap:wrap}
 .jauge{flex:1 1 120px;height:10px;background:#E6EBF6;border-radius:99px;overflow:hidden;min-width:100px}
 .jauge i{display:block;height:100%;background:var(--vert);width:0;transition:width .3s}
@@ -801,6 +806,24 @@ $$(".etape").forEach(b => b.onclick = () => {
   stopVoix(); dessinerAppr();
 });
 
+function ecrireConsigne(texte){
+  const c = $("#consigne"); c.innerHTML = "";
+  const b = document.createElement("button");
+  b.className = "hp"; b.textContent = "🗣️";
+  b.setAttribute("aria-label", "Écouter la consigne");
+  b.title = "Écouter la consigne";
+  b.onclick = () => {
+    stopVoix();
+    b.classList.add("parle");
+    if (!window.speechSynthesis) return b.classList.remove("parle");
+    const u = nouvelleParole(texte);
+    u.onend = u.onerror = () => b.classList.remove("parle");
+    speechSynthesis.speak(u);
+  };
+  const t = document.createElement("span"); t.textContent = texte;
+  c.append(b, t);
+}
+
 function outil(texte, action, classe){
   const b = document.createElement("button");
   b.className = "b fin " + (classe || ""); b.textContent = texte; b.onclick = action;
@@ -809,7 +832,7 @@ function outil(texte, action, classe){
 
 function dessinerAppr(){
   const zone = $("#poemeAppr");
-  $("#consigne").textContent = CONSIGNES[etat.mode];
+  ecrireConsigne(CONSIGNES[etat.mode]);
   $("#outilsMode").innerHTML = "";
   $("#score").innerHTML = "";
   const m = etat.mode;
