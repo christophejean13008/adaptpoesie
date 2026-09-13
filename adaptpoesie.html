@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Adaptpoésie</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+:root{
+  --papier:#F4F6FB;
+  --papier-2:#FFFFFF;
+  --encre:#16233F;
+  --encre-doux:#5A6A88;
+  --seyes:#A8BEDE;
+  --marge:#B79ED0;
+  --plume:#2F4FB0;
+  --vert:#2E8B72;
+  --miel:#D9962A;
+  --corail:#C1495B;
+  --rayon:14px;
+  --ombre:0 1px 0 #E3E8F2, 0 6px 18px rgba(22,35,63,.07);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--papier);
+  color:var(--encre);
+  font:400 17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  padding-bottom:60px;
+}
+h1,h2,h3{font-family:Georgia,"Iowan Old Style",serif;font-weight:600;letter-spacing:-.01em;margin:0}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font:inherit;color:var(--encre)}
+
+/* ---------- en-tête ---------- */
+header{
+  padding:18px 20px 14px;
+  background:
+    repeating-linear-gradient(to bottom,transparent 0 25px,var(--seyes) 25px 26px) 0 8px/100% 26px,
+    var(--papier-2);
+  border-bottom:2px solid var(--encre);
+  position:relative;
+}
+header::after{content:"";position:absolute;top:0;bottom:0;left:56px;width:1px;background:var(--marge)}
+header h1{font-size:30px;line-height:1.05}
+header p{margin:2px 0 0;color:var(--encre-doux);font-size:14px}
+.titre-zone{padding-left:74px}
+
+/* ---------- onglets ---------- */
+nav{display:flex;gap:6px;padding:12px 14px;overflow-x:auto;position:sticky;top:0;z-index:30;
+    background:rgba(244,246,251,.94);backdrop-filter:blur(8px);border-bottom:1px solid #DCE3F0}
+nav button{
+  flex:0 0 auto;padding:11px 18px;border-radius:999px;border:1.5px solid #C6D2E8;
+  background:var(--papier-2);color:var(--encre-doux);font-weight:600;font-size:15px;min-height:44px;
+}
+nav button[aria-current="true"]{background:var(--encre);border-color:var(--encre);color:#fff}
+nav button:disabled{opacity:.4}
+
+main{padding:16px 14px 40px;max-width:820px;margin:0 auto}
+section[hidden]{display:none}
+
+.carte{background:var(--papier-2);border:1px solid #DCE3F0;border-radius:var(--rayon);
+       box-shadow:var(--ombre);padding:16px;margin-bottom:14px}
+.carte h2{font-size:19px;margin-bottom:4px}
+.aide{color:var(--encre-doux);font-size:14px;margin:0 0 12px}
+
+/* ---------- boutons ---------- */
+.b{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+   min-height:48px;padding:12px 20px;border-radius:12px;font-weight:650;font-size:16px;
+   border:1.5px solid var(--encre);background:var(--papier-2);color:var(--encre)}
+.b.plein{background:var(--plume);border-color:var(--plume);color:#fff}
+.b.vert{background:var(--vert);border-color:var(--vert);color:#fff}
+.b.fin{min-height:40px;padding:8px 14px;font-size:14px;border-radius:10px}
+.b:active{transform:translateY(1px)}
+.b:disabled{opacity:.45}
+.b:focus-visible,nav button:focus-visible,.mot:focus-visible{outline:3px solid var(--miel);outline-offset:2px}
+.rangee{display:flex;flex-wrap:wrap;gap:10px}
+
+/* ---------- import ---------- */
+.depot{border:2px dashed #B9C7E2;border-radius:var(--rayon);padding:22px;text-align:center;background:#FCFDFF}
+.depot p{margin:8px 0 14px;color:var(--encre-doux);font-size:14px}
+#apercu{max-width:100%;border-radius:10px;margin-top:12px;display:none;border:1px solid #DCE3F0}
+.barre{height:8px;background:#E6EBF6;border-radius:99px;overflow:hidden;margin-top:12px;display:none}
+.barre i{display:block;height:100%;width:0;background:var(--plume);transition:width .2s}
+textarea{width:100%;min-height:230px;padding:12px;border:1.5px solid #C6D2E8;border-radius:12px;
+         line-height:1.7;background:#FCFDFF;resize:vertical}
+
+/* ---------- réglages ---------- */
+.reglages{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.champ{display:flex;flex-direction:column;gap:5px}
+.champ label{font-size:13px;font-weight:600;color:var(--encre-doux)}
+.champ select,.champ input[type=text]{padding:10px;border:1.5px solid #C6D2E8;border-radius:10px;background:#fff;min-height:44px}
+.champ input[type=range]{width:100%;height:44px}
+.champ input[type=color]{width:100%;height:44px;border:1.5px solid #C6D2E8;border-radius:10px;background:#fff;padding:3px}
+.bascules{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.bascule{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border:1.5px solid #C6D2E8;
+         border-radius:999px;background:#fff;font-size:14px;font-weight:600;min-height:44px}
+.bascule input{width:18px;height:18px;accent-color:var(--plume)}
+.bascule.on{border-color:var(--plume);background:#EEF2FD;color:var(--plume)}
+
+/* ---------- poème ---------- */
+.poeme{border:1px solid #DCE3F0;border-radius:var(--rayon);padding:18px 16px 18px 30px;position:relative;
+       background:var(--papier-2);overflow:hidden}
+.poeme::before{content:"";position:absolute;top:0;bottom:0;left:16px;width:1.5px;background:var(--marge);opacity:.6}
+.poeme.sans-marge::before{display:none}
+.entete-poeme{margin-bottom:12px}
+.entete-poeme .t{font-family:Georgia,serif;font-size:22px;font-weight:700}
+.entete-poeme .a{font-size:14px;color:var(--encre-doux);font-style:italic}
+.vers{display:flex;align-items:flex-start;gap:10px;padding:4px 0;border-radius:8px}
+.vers.regle{border-bottom:1px solid #EDF1F8}
+.vers.actif{background:#FFF6E3;box-shadow:inset 3px 0 0 var(--miel)}
+.vers.pair .txt{filter:none}
+.picto{flex:0 0 auto;font-size:26px;line-height:1.3;width:34px;text-align:center;background:none;padding:0;
+       border-radius:8px;min-height:34px}
+.picto.vide{opacity:.25}
+.txt{flex:1 1 auto}
+.strophe{height:16px}
+.mot{display:inline-block;padding:1px 2px;border-radius:5px;margin:0 1px;transition:background .12s}
+.mot.actif{background:var(--miel);color:#fff}
+.mot.cache{background:#E6EBF6;color:transparent;border-bottom:2px solid var(--plume);min-width:34px}
+.mot.trouve{background:#DFF1EA;color:inherit;border-bottom:2px solid var(--vert)}
+.syl-a{color:#1F5FA8}.syl-b{color:#B5442F}
+
+/* ---------- apprentissage ---------- */
+.etapes{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;margin:-4px 0 6px}
+.etape{flex:0 0 auto;padding:10px 15px;border-radius:10px;border:1.5px solid #C6D2E8;background:#fff;
+       font-size:14px;font-weight:600;min-height:44px;color:var(--encre-doux)}
+.etape[aria-pressed="true"]{background:var(--miel);border-color:var(--miel);color:#fff}
+.consigne{background:#FFF9EC;border-left:4px solid var(--miel);padding:11px 13px;border-radius:0 10px 10px 0;
+          font-size:15px;margin-bottom:12px}
+.score{display:flex;gap:14px;align-items:center;font-size:14px;color:var(--encre-doux);margin-top:12px;flex-wrap:wrap}
+.jauge{flex:1 1 120px;height:10px;background:#E6EBF6;border-radius:99px;overflow:hidden;min-width:100px}
+.jauge i{display:block;height:100%;background:var(--vert);width:0;transition:width .3s}
+.revision{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #EDF1F8;font-size:15px}
+.revision:last-child{border-bottom:none}
+.pastille{width:26px;height:26px;border-radius:50%;border:2px solid #C6D2E8;flex:0 0 auto}
+.pastille.ok{background:var(--vert);border-color:var(--vert)}
+.palette{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.palette button{font-size:24px;width:44px;height:44px;border-radius:10px;border:1.5px solid #DCE3F0;background:#fff}
+.modale{position:fixed;inset:0;background:rgba(22,35,63,.45);display:flex;align-items:flex-end;z-index:80}
+.modale[hidden]{display:none}
+.modale .boite{background:#fff;border-radius:18px 18px 0 0;padding:18px;width:100%;max-height:70vh;overflow:auto}
+.note{font-size:13px;color:var(--encre-doux);margin-top:10px}
+.err{background:#FDEDEF;border-left:4px solid var(--corail);padding:11px 13px;border-radius:0 10px 10px 0;font-size:14px;margin-top:10px}
+
+@media print{
+  body{background:#fff;padding:0}
+  header,nav,.carte.nonimp,.b,.etapes,.consigne,.score,#carteRevision,.pastille{display:none!important}
+  main{max-width:none;padding:0}
+  .carte{border:none;box-shadow:none;padding:0;margin:0}
+  .poeme{border:none}
+  .mot.cache{color:transparent;background:none;border-bottom:1.5px solid #999}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="titre-zone">
+    <h1>Adaptpoésie</h1>
+    <p>Photographier une poésie, l'adapter, l'écouter, l'apprendre.</p>
+  </div>
+</header>
+
+<nav>
+  <button id="ong1" aria-current="true" data-vue="v-import">1 · Importer</button>
+  <button id="ong2" data-vue="v-adapt" disabled>2 · Adapter</button>
+  <button id="ong3" data-vue="v-appr" disabled>3 · Apprendre</button>
+</nav>
+
+<main>
+
+<!-- ================= 1. IMPORTER ================= -->
+<section id="v-import">
+  <div class="carte">
+    <h2>D'où vient la poésie ?</h2>
+    <p class="aide">Photo du cahier, image, PDF, ou saisie directe. La reconnaissance de texte se fait sur l'appareil.</p>
+    <div class="depot">
+      <div class="rangee" style="justify-content:center">
+        <button class="b plein" id="btnPhoto">Prendre une photo</button>
+        <button class="b" id="btnFichier">Choisir une image ou un PDF</button>
+      </div>
+      <p>Puis on corrige le texte avant de continuer.</p>
+      <input type="file" id="fPhoto" accept="image/*" capture="environment" hidden>
+      <input type="file" id="fFichier" accept="image/*,application/pdf" hidden>
+      <img id="apercu" alt="Aperçu de la page importée">
+      <div class="barre" id="barre"><i></i></div>
+      <div id="etatOcr" class="note"></div>
+    </div>
+  </div>
+
+  <div class="carte">
+    <h2>Le texte</h2>
+    <p class="aide">Un vers par ligne. Une ligne vide sépare deux strophes.</p>
+    <div class="reglages" style="margin-bottom:12px">
+      <div class="champ"><label for="titre">Titre</label><input type="text" id="titre" placeholder="Le cancre"></div>
+      <div class="champ"><label for="auteur">Auteur</label><input type="text" id="auteur" placeholder="Jacques Prévert"></div>
+    </div>
+    <textarea id="brut" placeholder="Colle ou tape ici les vers de la poésie…"></textarea>
+    <div class="rangee" style="margin-top:12px">
+      <button class="b plein" id="btnValider">Adapter ce texte</button>
+      <button class="b fin" id="btnExemple">Charger un exemple</button>
+      <button class="b fin" id="btnVider">Tout effacer</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 2. ADAPTER ================= -->
+<section id="v-adapt" hidden>
+  <div class="carte nonimp">
+    <h2>Mise en forme</h2>
+    <div class="reglages">
+      <div class="champ"><label for="police">Police</label>
+        <select id="police">
+          <option value="Verdana,Geneva,sans-serif">Verdana</option>
+          <option value="'Comic Sans MS','Chalkboard SE',cursive">Comic Sans / Chalkboard</option>
+          <option value="'Andika','Luciole',Verdana,sans-serif">Andika / Luciole</option>
+          <option value="'OpenDyslexic','Century Gothic',Verdana,sans-serif">OpenDyslexic</option>
+          <option value="Arial,Helvetica,sans-serif">Arial</option>
+          <option value="Georgia,serif">Georgia (serif)</option>
+        </select>
+      </div>
+      <div class="champ"><label for="taille">Taille du texte · <span id="vTaille">22</span> px</label>
+        <input type="range" id="taille" min="14" max="46" value="22"></div>
+      <div class="champ"><label for="inter">Interligne · <span id="vInter">1,8</span></label>
+        <input type="range" id="inter" min="12" max="32" value="18"></div>
+      <div class="champ"><label for="espace">Espacement des lettres · <span id="vEspace">0</span></label>
+        <input type="range" id="espace" min="0" max="30" value="0"></div>
+      <div class="champ"><label for="cTexte">Couleur du texte</label><input type="color" id="cTexte" value="#16233F"></div>
+      <div class="champ"><label for="cFond">Couleur du fond</label><input type="color" id="cFond" value="#FFFFFF"></div>
+    </div>
+    <div class="bascules">
+      <label class="bascule"><input type="checkbox" id="opAlt"> Alterner la couleur des vers</label>
+      <label class="bascule"><input type="checkbox" id="opSyl"> Colorer les syllabes</label>
+      <label class="bascule"><input type="checkbox" id="opRegle"> Ligne sous chaque vers</label>
+      <label class="bascule"><input type="checkbox" id="opNum"> Numéroter les vers</label>
+    </div>
+  </div>
+
+  <div class="carte nonimp">
+    <h2>Lecture à voix haute</h2>
+    <div class="bascules">
+      <label class="bascule on"><input type="radio" name="tap" value="mot" checked> Toucher un mot le lit</label>
+      <label class="bascule"><input type="radio" name="tap" value="vers"> Toucher un vers le lit</label>
+      <label class="bascule"><input type="radio" name="tap" value="rien"> Ne rien lire au toucher</label>
+    </div>
+    <div class="reglages" style="margin-top:12px">
+      <div class="champ"><label for="voix">Voix</label><select id="voix"></select></div>
+      <div class="champ"><label for="vitesse">Vitesse · <span id="vVitesse">0,9</span></label>
+        <input type="range" id="vitesse" min="5" max="13" value="9"></div>
+    </div>
+    <div class="rangee" style="margin-top:12px">
+      <button class="b plein" id="btnLire">Lire le poème</button>
+      <button class="b" id="btnStop">Arrêter</button>
+    </div>
+    <div id="errVoix"></div>
+  </div>
+
+  <div class="carte" id="carteAdapt">
+    <div class="poeme" id="poemeAdapt"></div>
+  </div>
+  <div class="rangee nonimp" style="margin-bottom:20px">
+    <button class="b vert" id="btnVersAppr">Passer à l'apprentissage</button>
+    <button class="b fin" id="btnImprimer">Imprimer la fiche</button>
+  </div>
+</section>
+
+<!-- ================= 3. APPRENDRE ================= -->
+<section id="v-appr" hidden>
+  <div class="etapes" id="etapes">
+    <button class="etape" data-mode="decouverte" aria-pressed="true">Découvrir</button>
+    <button class="etape" data-mode="pictos" aria-pressed="false">Images mentales</button>
+    <button class="etape" data-mode="boule" aria-pressed="false">Boule de neige</button>
+    <button class="etape" data-mode="motcache" aria-pressed="false">Mot caché</button>
+    <button class="etape" data-mode="effacement" aria-pressed="false">Effacement progressif</button>
+    <button class="etape" data-mode="initiales" aria-pressed="false">Premières lettres</button>
+    <button class="etape" data-mode="recitation" aria-pressed="false">Réciter</button>
+  </div>
+
+  <div class="carte">
+    <div class="consigne" id="consigne"></div>
+    <div class="rangee" id="outilsMode" style="margin-bottom:14px"></div>
+    <div class="poeme" id="poemeAppr"></div>
+    <div class="score" id="score"></div>
+  </div>
+
+  <div class="carte" id="carteRevision">
+    <h2>Revenir dessus</h2>
+    <p class="aide">La mémoire tient si on revoit la poésie de plus en plus espacé. Coche une séance quand elle est faite.</p>
+    <div id="listeRevision"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="modale" id="modalePicto" hidden>
+  <div class="boite">
+    <h2 style="font-size:18px;margin-bottom:6px">Choisir une image pour ce vers</h2>
+    <p class="aide" id="versPicto"></p>
+    <div class="palette" id="palettePicto"></div>
+    <div class="rangee" style="margin-top:14px">
+      <button class="b fin" id="picSuppr">Enlever l'image</button>
+      <button class="b fin plein" id="picFermer">Fermer</button>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.0/dist/tesseract.min.js"></script>
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+/* ---------- mémoire locale tolérante (marche même si bloquée) ---------- */
+const memoire = (() => {
+  let ok = true; try { localStorage.setItem("_t","1"); localStorage.removeItem("_t"); } catch(e){ ok = false; }
+  const tampon = {};
+  return {
+    lire(c){ try { return ok ? JSON.parse(localStorage.getItem(c) || "null") : (tampon[c] ?? null); } catch(e){ return null; } },
+    ecrire(c,v){ try { ok ? localStorage.setItem(c, JSON.stringify(v)) : (tampon[c]=v); } catch(e){ tampon[c]=v; } }
+  };
+})();
+
+/* ---------- état ---------- */
+const etat = {
+  titre:"", auteur:"", vers:[],           // {texte, mots[], strophe:bool}
+  pictos:{},                              // index de vers -> emoji
+  mode:"decouverte",
+  niveauEffacement:1,
+  acquis:{},                              // index de vers -> true
+  revisions:[]
+};
+
+/* ---------- dictionnaire d'images mentales (hors ligne) ---------- */
+const IMAGES = {
+"lune":"🌙","soleil":"☀️","etoile":"⭐","nuit":"🌜","jour":"🌤️","ciel":"🌌","nuage":"☁️","pluie":"🌧️",
+"neige":"❄️","vent":"🌬️","orage":"⛈️","arc":"🌈","brouillard":"🌫️","glace":"🧊","feu":"🔥","eau":"💧",
+"terre":"🌍","pierre":"🪨","sable":"🏖️","or":"🥇","argent":"🪙","arbre":"🌳","feuille":"🍂","branche":"🌿",
+"fleur":"🌸","rose":"🌹","jardin":"🌷","foret":"🌲","bois":"🪵","herbe":"🌱","ble":"🌾","champ":"🌾",
+"oiseau":"🐦","hirondelle":"🐦","corbeau":"🐦‍⬛","hibou":"🦉","coq":"🐓","poule":"🐔","chat":"🐱","chien":"🐶",
+"souris":"🐭","poisson":"🐟","baleine":"🐋","papillon":"🦋","abeille":"🐝","escargot":"🐌","fourmi":"🐜",
+"araignee":"🕷️","grenouille":"🐸","serpent":"🐍","cheval":"🐴","vache":"🐄","mouton":"🐑","cochon":"🐷",
+"loup":"🐺","renard":"🦊","ours":"🐻","lion":"🦁","tigre":"🐯","elephant":"🐘","singe":"🐒","lapin":"🐰",
+"tortue":"🐢","dauphin":"🐬","mer":"🌊","vague":"🌊","bateau":"⛵","port":"⚓","ile":"🏝️","riviere":"🏞️",
+"fleuve":"🏞️","montagne":"⛰️","colline":"⛰️","chemin":"🛤️","route":"🛣️","pont":"🌉","maison":"🏠",
+"chateau":"🏰","ecole":"🏫","eglise":"⛪","porte":"🚪","fenetre":"🪟","toit":"🏠","mur":"🧱","escalier":"🪜",
+"lit":"🛏️","table":"🪑","chaise":"🪑","livre":"📕","cahier":"📒","crayon":"✏️","stylo":"🖊️","page":"📄",
+"lettre":"✉️","mot":"💬","tableau":"🖼️","cloche":"🔔","horloge":"🕰️","temps":"⏳","heure":"⏰",
+"main":"✋","doigt":"👆","coeur":"❤️","oeil":"👁️","yeux":"👀","tete":"🧑","cheveux":"💇","pied":"🦶",
+"bouche":"👄","dent":"🦷","oreille":"👂","bras":"💪","enfant":"🧒","fille":"👧","garcon":"👦","maman":"👩",
+"mere":"👩","papa":"👨","pere":"👨","grand":"👴","bebe":"👶","ami":"🧑‍🤝‍🧑","homme":"👨","femme":"👩",
+"roi":"🤴","reine":"👑","fee":"🧚","sorciere":"🧙","geant":"🗿","dragon":"🐉","ange":"👼","fantome":"👻",
+"printemps":"🌷","ete":"🏖️","automne":"🍁","hiver":"⛄","noel":"🎄","cadeau":"🎁","fete":"🎉",
+"musique":"🎵","chanson":"🎶","chant":"🎤","danse":"💃","violon":"🎻","tambour":"🥁","rire":"😄",
+"pleure":"😢","larme":"😢","dort":"😴","sommeil":"😴","reve":"💭","court":"🏃","vole":"🕊️","marche":"🚶",
+"saute":"🤸","mange":"🍽️","boit":"🥤","pain":"🥖","pomme":"🍎","poire":"🍐","cerise":"🍒","fraise":"🍓",
+"raisin":"🍇","fruit":"🍎","legume":"🥕","gateau":"🍰","chocolat":"🍫","bonbon":"🍬","lait":"🥛",
+"cafe":"☕","soupe":"🍲","miel":"🍯","train":"🚂","voiture":"🚗","velo":"🚲","avion":"✈️","fusee":"🚀",
+"bus":"🚌","ville":"🏙️","rue":"🛣️","village":"🏘️","marche":"🏪","silence":"🤫","ombre":"🌑",
+"lumiere":"💡","couleur":"🎨","rouge":"🟥","bleu":"🟦","vert":"🟩","jaune":"🟨","noir":"⬛","blanc":"⬜",
+"froid":"🥶","chaud":"🥵","peur":"😨","joie":"😊","amour":"💗","triste":"😔","colere":"😠","mort":"⚰️",
+"vie":"🌱","guerre":"⚔️","paix":"🕊️","liberte":"🕊️","cri":"📣","voix":"🗣️","souffle":"💨","clef":"🔑",
+"cle":"🔑","tresor":"💎","bague":"💍","miroir":"🪞","bougie":"🕯️","lampe":"🏮","etoiles":"✨","ombres":"🌑"
+};
+const PALETTE_EMOJI = "🌙☀️⭐🌈☁️🌧️❄️🔥💧🌊🌳🌸🌹🍂🐦🦋🐱🐶🐺🦊🐻🐟🐝🏠🏰🚪🪟⛵🚂🚗✈️❤️👁️✋🧒👧👦👩👨👑🧚🐉👻🎵🎁🎄🍎🍰🥖⏰🕰️📕✏️💭😴😄😢😨👣🔑💎🕯️💡🌑⚔️🕊️".match(/./gu);
+
+const sansAccent = m => m.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+function imagePour(texte){
+  const mots = texte.split(/[^A-Za-zÀ-ÿ'’-]+/).filter(Boolean);
+  let meilleur = null, longueur = 0;
+  for (const m of mots){
+    let r = sansAccent(m).replace(/['’-]/g,"");
+    const essais = [r, r.replace(/(es|s|x|e)$/,""), r.replace(/(ent|er|ait|ais|ais|ons|ez)$/,"")];
+    for (const e of essais){
+      if (e.length > 2 && IMAGES[e] && e.length > longueur){ meilleur = IMAGES[e]; longueur = e.length; }
+    }
+  }
+  return meilleur;
+}
+
+/* ---------- découpage en syllabes (approximatif) ---------- */
+const VOY = "aeiouyâàäéèêëîïôöùûüœæ";
+function syllabes(mot){
+  const b = mot.toLowerCase(), n = mot.length;
+  if (n < 4) return [mot];
+  const estV = i => VOY.includes(b[i]);
+  const coupes = [];
+  for (let i = 1; i < n - 1; i++){
+    if (!estV(i)) continue;                     // i = voyelle
+    let j = i + 1, cons = "";
+    while (j < n && !estV(j)){ cons += b[j]; j++; }
+    if (j >= n || cons.length === 0) continue;  // pas de voyelle après
+    if (cons.length === 1){ coupes.push(i + 1); }
+    else {
+      const paire = cons.slice(0,2);
+      if (["ch","ph","th","gn","qu","bl","cl","fl","gl","pl","br","cr","dr","fr","gr","pr","tr","vr"].includes(paire))
+        coupes.push(i + 1);
+      else coupes.push(i + 2);
+    }
+  }
+  const sorties = [];
+  let prec = 0;
+  for (const c of coupes){ if (c > prec && n - c >= 1){ sorties.push(mot.slice(prec,c)); prec = c; } }
+  sorties.push(mot.slice(prec));
+  return sorties.filter(Boolean);
+}
+
+/* ================= IMPORT & RECONNAISSANCE DE TEXTE ================= */
+const barre = $("#barre"), jaugeOcr = barre.querySelector("i"), etatOcr = $("#etatOcr");
+function progresse(p, texte){
+  barre.style.display = "block"; jaugeOcr.style.width = Math.round(p*100) + "%";
+  etatOcr.textContent = texte || "";
+}
+function messageErreur(t){ etatOcr.innerHTML = '<div class="err">' + t + '</div>'; barre.style.display = "none"; }
+
+$("#btnPhoto").onclick = () => $("#fPhoto").click();
+$("#btnFichier").onclick = () => $("#fFichier").click();
+$("#fPhoto").onchange = e => traiterFichier(e.target.files[0]);
+$("#fFichier").onchange = e => traiterFichier(e.target.files[0]);
+
+async function traiterFichier(f){
+  if (!f) return;
+  etatOcr.textContent = ""; 
+  try {
+    let canvas;
+    if (f.type === "application/pdf"){
+      if (!window.pdfjsLib) return messageErreur("Le lecteur de PDF n'a pas pu se charger. Connecte l'appareil au Wi-Fi une fois, ou tape le texte à la main plus bas.");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      progresse(.1, "Ouverture du PDF…");
+      const pdf = await pdfjsLib.getDocument({data: await f.arrayBuffer()}).promise;
+      const page = await pdf.getPage(1);
+      // du texte déjà présent dans le PDF ? on évite l'OCR
+      const contenu = await page.getTextContent();
+      const direct = contenu.items.map(i => i.str).join(" ").trim();
+      const vue = page.getViewport({scale: 2});
+      canvas = document.createElement("canvas");
+      canvas.width = vue.width; canvas.height = vue.height;
+      await page.render({canvasContext: canvas.getContext("2d"), viewport: vue}).promise;
+      montrerApercu(canvas.toDataURL("image/jpeg", .85));
+      if (direct.length > 40){
+        let lignes = [];
+        let y = null, ligne = "";
+        for (const it of contenu.items){
+          const ny = Math.round(it.transform[5]);
+          if (y !== null && Math.abs(ny - y) > 4){ lignes.push(ligne.trim()); ligne = ""; }
+          ligne += it.str; y = ny;
+        }
+        lignes.push(ligne.trim());
+        deposerTexte(lignes.join("\n"));
+        progresse(1, "Texte extrait du PDF.");
+        return;
+      }
+    } else {
+      canvas = await imageVersCanvas(f);
+      montrerApercu(canvas.toDataURL("image/jpeg", .85));
+    }
+    if (!window.Tesseract) return messageErreur("La reconnaissance de texte n'a pas pu se charger. Connecte l'appareil au Wi-Fi une fois (les fichiers restent ensuite en cache), ou tape le texte à la main plus bas.");
+    progresse(.15, "Lecture de l'image… (la première fois, il faut du Wi-Fi)");
+    const res = await Tesseract.recognize(canvas, "fra", {
+      logger: m => { if (m.status === "recognizing text") progresse(.2 + m.progress*.8, "Lecture de l'image… " + Math.round(m.progress*100) + " %"); }
+    });
+    deposerTexte(res.data.text);
+    progresse(1, "Texte reconnu. Corrige-le si besoin : un vers par ligne.");
+  } catch(err){
+    messageErreur("La lecture a échoué (" + (err.message || err) + "). Tu peux taper ou coller le texte directement.");
+  }
+}
+
+function imageVersCanvas(f){
+  return new Promise((ok, ko) => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 1800, e = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = img.width*e; c.height = img.height*e;
+      const x = c.getContext("2d");
+      x.drawImage(img, 0, 0, c.width, c.height);
+      // contraste renforcé : aide beaucoup sur une photo de cahier
+      const d = x.getImageData(0,0,c.width,c.height), p = d.data;
+      for (let i = 0; i < p.length; i += 4){
+        const g = .3*p[i] + .59*p[i+1] + .11*p[i+2];
+        const v = g < 120 ? 0 : g > 175 ? 255 : (g-120)*255/55;
+        p[i] = p[i+1] = p[i+2] = v;
+      }
+      x.putImageData(d, 0, 0);
+      URL.revokeObjectURL(img.src); ok(c);
+    };
+    img.onerror = () => ko(new Error("image illisible"));
+    img.src = URL.createObjectURL(f);
+  });
+}
+function montrerApercu(url){ const a = $("#apercu"); a.src = url; a.style.display = "block"; }
+
+function deposerTexte(t){
+  const lignes = t.split(/\r?\n/).map(l => l.replace(/[|_]+/g," ").replace(/\s+/g," ").trim());
+  $("#brut").value = lignes.join("\n").replace(/\n{3,}/g,"\n\n").trim();
+  devinerTitre();
+}
+function devinerTitre(){
+  const l = $("#brut").value.split("\n").filter(Boolean);
+  if (l.length && !$("#titre").value) $("#titre").value = l[0].length < 45 ? l[0] : "";
+}
+
+$("#btnVider").onclick = () => { $("#brut").value = ""; $("#titre").value = ""; $("#auteur").value = "";
+  $("#apercu").style.display = "none"; barre.style.display = "none"; etatOcr.textContent = ""; };
+$("#btnExemple").onclick = () => {
+  $("#titre").value = "Le temps a laissé son manteau";
+  $("#auteur").value = "Charles d'Orléans";
+  $("#brut").value =
+`Le temps a laissé son manteau
+De vent, de froidure et de pluie,
+Et s'est vêtu de broderie,
+De soleil luisant, clair et beau.
+
+Il n'y a bête ni oiseau
+Qu'en son jargon ne chante ou crie :
+Le temps a laissé son manteau.
+
+Rivière, fontaine et ruisseau
+Portent, en livrée jolie,
+Gouttes d'argent d'orfèvrerie,
+Chacun s'habille de nouveau :
+Le temps a laissé son manteau.`;
+};
+
+/* ================= VALIDATION DU TEXTE ================= */
+$("#btnValider").onclick = () => {
+  const lignes = $("#brut").value.split(/\r?\n/);
+  const vers = [];
+  for (const l of lignes){
+    const t = l.trim();
+    if (!t){ if (vers.length && !vers[vers.length-1].strophe) vers.push({texte:"", mots:[], strophe:true}); continue; }
+    vers.push({texte:t, mots:t.split(/(\s+)/).filter(s => s.trim()), strophe:false});
+  }
+  while (vers.length && vers[vers.length-1].strophe) vers.pop();
+  if (!vers.length) return alert("Il n'y a pas encore de texte à adapter.");
+  etat.vers = vers;
+  etat.titre = $("#titre").value.trim();
+  etat.auteur = $("#auteur").value.trim();
+  etat.acquis = {};
+  etat.pictos = {};
+  vers.forEach((v,i) => { if (!v.strophe){ const e = imagePour(v.texte); if (e) etat.pictos[i] = e; } });
+  chargerSuivi();
+  $("#ong2").disabled = false; $("#ong3").disabled = false;
+  allerA("v-adapt");
+  dessinerAdapt();
+};
+
+/* ================= NAVIGATION ================= */
+function allerA(id){
+  $$("main > section").forEach(s => s.hidden = s.id !== id);
+  $$("nav button").forEach(b => b.setAttribute("aria-current", String(b.dataset.vue === id)));
+  window.scrollTo(0,0);
+  stopVoix();
+}
+$$("nav button").forEach(b => b.onclick = () => { if (!b.disabled) allerA(b.dataset.vue); });
+$("#btnVersAppr").onclick = () => { allerA("v-appr"); dessinerAppr(); };
+$("#btnImprimer").onclick = () => window.print();
+
+/* ================= MISE EN FORME ================= */
+const reglages = ["police","taille","inter","espace","cTexte","cFond","opAlt","opSyl","opRegle","opNum"];
+reglages.forEach(id => $("#"+id).addEventListener("input", () => {
+  $("#vTaille").textContent = $("#taille").value;
+  $("#vInter").textContent = ($("#inter").value/10).toFixed(1).replace(".",",");
+  $("#vEspace").textContent = $("#espace").value;
+  $$(".bascule").forEach(l => l.classList.toggle("on", !!l.querySelector("input:checked")));
+  appliquerStyle($("#poemeAdapt")); appliquerStyle($("#poemeAppr"));
+  dessinerAdapt(); if (!$("#v-appr").hidden) dessinerAppr();
+}));
+$$('input[name=tap]').forEach(r => r.onchange = () =>
+  $$(".bascule").forEach(l => l.classList.toggle("on", !!l.querySelector("input:checked"))));
+
+function appliquerStyle(zone){
+  if (!zone) return;
+  zone.style.fontFamily = $("#police").value;
+  zone.style.fontSize = $("#taille").value + "px";
+  zone.style.lineHeight = ($("#inter").value/10);
+  zone.style.letterSpacing = ($("#espace").value/10) + "px";
+  zone.style.color = $("#cTexte").value;
+  zone.style.background = $("#cFond").value;
+}
+
+/* ================= RENDU DU POÈME ================= */
+const PONCT = /^([«"'(\[]*)(.*?)([.,;:!?…»"')\]]*)$/u;
+
+function rendrePoeme(zone, o){
+  o = Object.assign({pictos:false, pictoModifiable:false, etatMot:() => "visible", coche:false}, o);
+  zone.innerHTML = "";
+  zone.classList.toggle("sans-marge", !!o.sansMarge);
+  if (etat.titre || etat.auteur){
+    const e = document.createElement("div"); e.className = "entete-poeme";
+    e.innerHTML = (etat.titre ? '<div class="t"></div>' : "") + (etat.auteur ? '<div class="a"></div>' : "");
+    if (etat.titre) e.querySelector(".t").textContent = etat.titre;
+    if (etat.auteur) e.querySelector(".a").textContent = etat.auteur;
+    zone.appendChild(e);
+  }
+  let numero = 0;
+  etat.vers.forEach((v, iv) => {
+    if (v.strophe){ const s = document.createElement("div"); s.className = "strophe"; zone.appendChild(s); return; }
+    numero++;
+    const ligne = document.createElement("div");
+    ligne.className = "vers" + ($("#opRegle").checked ? " regle" : "") + (numero % 2 === 0 ? " pair" : "");
+    ligne.dataset.v = iv;
+    if ($("#opAlt").checked && numero % 2 === 0) ligne.style.color = melange($("#cTexte").value);
+
+    if (o.pictos && !o.pictoModifiable && !etat.pictos[iv]){
+      const sp = document.createElement("span"); sp.className = "picto vide"; sp.textContent = "";
+      ligne.appendChild(sp);
+    } else if (o.pictos){
+      const p = document.createElement("button");
+      p.className = "picto" + (etat.pictos[iv] ? "" : " vide");
+      p.textContent = etat.pictos[iv] || "＋";
+      p.setAttribute("aria-label", "Image du vers " + numero);
+      if (o.pictoModifiable) p.onclick = ev => { ev.stopPropagation(); ouvrirPalette(iv); };
+      else p.tabIndex = -1;
+      ligne.appendChild(p);
+    }
+    if ($("#opNum").checked){
+      const n = document.createElement("span");
+      n.textContent = numero; n.style.cssText = "font-size:.6em;opacity:.45;min-width:1.6em;text-align:right";
+      ligne.appendChild(n);
+    }
+
+    const txt = document.createElement("div"); txt.className = "txt";
+    v.mots.forEach((mot, im) => {
+      const [,avant, coeur, apres] = mot.match(PONCT);
+      const e = o.etatMot(iv, im, coeur);
+      const s = document.createElement("span");
+      s.className = "mot" + (e === "cache" ? " cache" : "") + (e === "trouve" ? " trouve" : "");
+      s.dataset.v = iv; s.dataset.m = im; s.dataset.texte = coeur;
+      s.tabIndex = 0;
+      if (e === "initiale" && coeur.length > 1){
+        s.textContent = avant + coeur[0] + "_".repeat(Math.min(coeur.length - 1, 8)) + apres;
+        s.dataset.masque = "1";
+      } else if (e === "cache"){
+        s.textContent = avant + coeur + apres;
+        s.dataset.masque = "1";
+      } else if ($("#opSyl").checked && coeur.length > 3){
+        if (avant) s.appendChild(document.createTextNode(avant));
+        syllabes(coeur).forEach((sy, k) => {
+          const b = document.createElement("span");
+          b.className = k % 2 ? "syl-b" : "syl-a"; b.textContent = sy; s.appendChild(b);
+        });
+        if (apres) s.appendChild(document.createTextNode(apres));
+      } else s.textContent = mot;
+      txt.appendChild(s); txt.appendChild(document.createTextNode(" "));
+    });
+    ligne.appendChild(txt);
+
+    if (o.coche){
+      const c = document.createElement("button");
+      c.className = "pastille" + (etat.acquis[iv] ? " ok" : "");
+      c.setAttribute("aria-label", "Je sais le vers " + numero);
+      c.onclick = ev => { ev.stopPropagation(); etat.acquis[iv] = !etat.acquis[iv]; enregistrerSuivi(); dessinerAppr(); };
+      ligne.appendChild(c);
+    }
+    zone.appendChild(ligne);
+  });
+  appliquerStyle(zone);
+  zone.onclick = ev => auToucher(ev, o);
+}
+
+function melange(hex){
+  const n = parseInt(hex.slice(1),16);
+  let r = (n>>16)&255, g = (n>>8)&255, b = n&255;
+  r = Math.round(r*.55 + 40); g = Math.round(g*.55 + 90); b = Math.round(b*.55 + 120);
+  return "rgb(" + r + "," + g + "," + b + ")";
+}
+
+function auToucher(ev, o){
+  const mot = ev.target.closest(".mot");
+  const ligne = ev.target.closest(".vers");
+  if (!ligne) return;
+  if (mot && mot.dataset.masque === "1"){
+    mot.classList.remove("cache"); mot.classList.add("trouve");
+    mot.textContent = etat.vers[+mot.dataset.v].mots[+mot.dataset.m];
+    delete mot.dataset.masque;
+    dire(mot.dataset.texte);
+    return;
+  }
+  if (o.revelerVers && ligne.querySelector('[data-masque="1"]')){
+    ligne.querySelectorAll('[data-masque="1"]').forEach(m => {
+      m.classList.remove("cache"); m.classList.add("trouve");
+      m.textContent = etat.vers[+m.dataset.v].mots[+m.dataset.m]; delete m.dataset.masque;
+    });
+    dire(etat.vers[+ligne.dataset.v].texte);
+    return;
+  }
+  const reglage = document.querySelector('input[name=tap]:checked').value;
+  if (reglage === "mot" && mot) dire(mot.dataset.texte);
+  else if (reglage === "vers") dire(etat.vers[+ligne.dataset.v].texte);
+}
+
+/* ================= VOIX ================= */
+let listeVoix = [], enLecture = false;
+function chargerVoix(){
+  listeVoix = (window.speechSynthesis ? speechSynthesis.getVoices() : []).filter(v => /fr/i.test(v.lang));
+  const sel = $("#voix"); sel.innerHTML = "";
+  if (!window.speechSynthesis){ $("#errVoix").innerHTML = '<div class="err">Cet appareil ne propose pas de synthèse vocale.</div>'; return; }
+  if (!listeVoix.length){ sel.innerHTML = "<option>Voix par défaut</option>"; return; }
+  listeVoix.forEach((v,i) => { const o = document.createElement("option"); o.value = i; o.textContent = v.name; sel.appendChild(o); });
+  const memo = memoire.lire("voix");
+  if (memo != null && listeVoix[memo]) sel.value = memo;
+}
+if (window.speechSynthesis){ chargerVoix(); speechSynthesis.onvoiceschanged = chargerVoix; }
+$("#voix").onchange = () => memoire.ecrire("voix", $("#voix").value);
+$("#vitesse").oninput = () => $("#vVitesse").textContent = ($("#vitesse").value/10).toFixed(1).replace(".",",");
+
+function nouvelleParole(t){
+  const u = new SpeechSynthesisUtterance(t);
+  const v = listeVoix[+$("#voix").value];
+  if (v) u.voice = v;
+  u.lang = v ? v.lang : "fr-FR";
+  u.rate = $("#vitesse").value/10;
+  return u;
+}
+function stopVoix(){
+  enLecture = false;
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  $$(".vers.actif").forEach(e => e.classList.remove("actif"));
+  $$(".mot.actif").forEach(e => e.classList.remove("actif"));
+}
+function dire(t){
+  if (!t || !window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(nouvelleParole(t));
+}
+$("#btnStop").onclick = stopVoix;
+$("#btnLire").onclick = () => lireTout($("#poemeAdapt"));
+
+function lireTout(zone){
+  if (!window.speechSynthesis) return;
+  stopVoix(); enLecture = true;
+  const lignes = Array.from(zone.querySelectorAll(".vers"));
+  lignes.forEach(ligne => {
+    const iv = +ligne.dataset.v;
+    const texte = etat.vers[iv].texte;
+    const u = nouvelleParole(texte);
+    const mots = Array.from(ligne.querySelectorAll(".mot"));
+    const debuts = []; let pos = 0;
+    etat.vers[iv].mots.forEach(m => { debuts.push(pos); pos += m.length + 1; });
+    u.onstart = () => { if (!enLecture) return; $$(".vers.actif").forEach(e => e.classList.remove("actif"));
+      ligne.classList.add("actif"); ligne.scrollIntoView({block:"center", behavior:"smooth"}); };
+    u.onboundary = ev => {
+      if (ev.name && ev.name !== "word") return;
+      let k = 0; for (let i = 0; i < debuts.length; i++) if (debuts[i] <= ev.charIndex) k = i;
+      mots.forEach(m => m.classList.remove("actif"));
+      if (mots[k] && !mots[k].dataset.masque) mots[k].classList.add("actif");
+    };
+    u.onend = () => { mots.forEach(m => m.classList.remove("actif"));
+      if (ligne === lignes[lignes.length-1]){ ligne.classList.remove("actif"); enLecture = false; } };
+    speechSynthesis.speak(u);
+  });
+}
+
+function dessinerAdapt(){
+  rendrePoeme($("#poemeAdapt"), {pictos:false});
+}
+
+/* ================= APPRENTISSAGE ================= */
+let graine = 1, tirage = 0, nbMotsCaches = 1, indexBoule = 0;
+function alea(){ graine = (graine*1103515245 + 12345) % 2147483648; return graine/2147483648; }
+function motsMelanges(){
+  graine = 97 + etat.vers.length*13 + tirage*7 + etat.titre.length;
+  const l = [];
+  etat.vers.forEach((v,iv) => { if (!v.strophe) v.mots.forEach((m,im) => { if (m.replace(/[^\p{L}\p{N}]/gu,"").length > 1) l.push([iv,im]); }); });
+  for (let i = l.length - 1; i > 0; i--){ const j = Math.floor(alea()*(i+1)); [l[i],l[j]] = [l[j],l[i]]; }
+  return l;
+}
+function cachesParVers(n){
+  const sel = {};
+  etat.vers.forEach((v,iv) => {
+    if (v.strophe) return;
+    const cand = v.mots.map((m,im) => [im, m.replace(/[^\p{L}\p{N}]/gu,"").length]).filter(x => x[1] > 2);
+    graine = 31 + iv*17 + tirage*101;
+    const choisis = [];
+    for (let k = 0; k < Math.min(n, cand.length); k++){
+      let c; let garde = 0;
+      do { c = cand[Math.floor(alea()*cand.length)][0]; garde++; } while (choisis.includes(c) && garde < 30);
+      choisis.push(c);
+    }
+    sel[iv] = choisis;
+  });
+  return sel;
+}
+
+const CONSIGNES = {
+  decouverte:"On écoute le poème en suivant les vers du doigt. Le mot touché se relit tout seul.",
+  pictos:"Une image par vers : associer un mot à une image aide beaucoup la mémoire. Touche une image pour la changer.",
+  boule:"Un vers, puis deux, puis trois… On récite à chaque fois depuis le début.",
+  motcache:"Un mot manque dans chaque vers. On le dit de mémoire, puis on touche la case pour vérifier.",
+  effacement:"Le texte s'efface petit à petit. À chaque tour, on récite tout le poème.",
+  initiales:"Il ne reste que la première lettre de chaque mot. Elle suffit souvent pour retrouver le vers.",
+  recitation:"Tout est masqué. On récite, on touche le vers pour se corriger, puis on coche ce qui est su."
+};
+
+$$(".etape").forEach(b => b.onclick = () => {
+  etat.mode = b.dataset.mode;
+  $$(".etape").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  if (etat.mode === "boule") indexBoule = 0;
+  stopVoix(); dessinerAppr();
+});
+
+function outil(texte, action, classe){
+  const b = document.createElement("button");
+  b.className = "b fin " + (classe || ""); b.textContent = texte; b.onclick = action;
+  $("#outilsMode").appendChild(b);
+}
+
+function dessinerAppr(){
+  const zone = $("#poemeAppr");
+  $("#consigne").textContent = CONSIGNES[etat.mode];
+  $("#outilsMode").innerHTML = "";
+  $("#score").innerHTML = "";
+  const m = etat.mode;
+
+  if (m === "decouverte"){
+    rendrePoeme(zone, {pictos:Object.keys(etat.pictos).length > 0});
+    outil("Lire le poème", () => lireTout(zone), "plein");
+    outil("Arrêter", stopVoix);
+  }
+
+  else if (m === "pictos"){
+    rendrePoeme(zone, {pictos:true, pictoModifiable:true});
+    outil("Proposer des images", () => {
+      etat.vers.forEach((v,i) => { if (!v.strophe){ const e = imagePour(v.texte); if (e) etat.pictos[i] = e; } });
+      dessinerAppr();
+    }, "plein");
+    outil("Tout enlever", () => { etat.pictos = {}; dessinerAppr(); });
+    outil("Lire le poème", () => lireTout(zone));
+  }
+
+  else if (m === "boule"){
+    const reels = etat.vers.map((v,i) => v.strophe ? -1 : i).filter(i => i >= 0);
+    const limite = reels[Math.min(indexBoule, reels.length-1)];
+    rendrePoeme(zone, {pictos:true, etatMot:(iv) => iv <= limite ? "visible" : "cache"});
+    outil("Vers suivant", () => { if (indexBoule < reels.length-1) indexBoule++; dessinerAppr(); }, "plein");
+    outil("Revenir en arrière", () => { if (indexBoule > 0) indexBoule--; dessinerAppr(); });
+    outil("Recommencer", () => { indexBoule = 0; dessinerAppr(); });
+    outil("Lire depuis le début", () => lireTout(zone));
+    $("#score").innerHTML = "<span>Vers appris ensemble : " + (indexBoule+1) + " sur " + reels.length + "</span>";
+  }
+
+  else if (m === "motcache"){
+    const sel = cachesParVers(nbMotsCaches);
+    rendrePoeme(zone, {pictos:true, etatMot:(iv,im) => (sel[iv]||[]).includes(im) ? "cache" : "visible"});
+    outil("D'autres mots", () => { tirage++; dessinerAppr(); }, "plein");
+    outil("Cacher plus de mots", () => { nbMotsCaches = nbMotsCaches % 3 + 1; dessinerAppr(); });
+    outil("Tout montrer", () => rendrePoeme(zone, {pictos:true}));
+    $("#score").innerHTML = "<span>" + nbMotsCaches + " mot" + (nbMotsCaches>1?"s":"") + " caché" + (nbMotsCaches>1?"s":"") + " par vers</span>";
+  }
+
+  else if (m === "effacement"){
+    const liste = motsMelanges();
+    const part = Math.round(liste.length * etat.niveauEffacement/5);
+    const caches = new Set(liste.slice(0, part).map(([a,b]) => a + ":" + b));
+    rendrePoeme(zone, {pictos:true, etatMot:(iv,im) => caches.has(iv+":"+im) ? "cache" : "visible", revelerVers:true});
+    outil("Effacer un peu plus", () => { if (etat.niveauEffacement < 5) etat.niveauEffacement++; dessinerAppr(); }, "plein");
+    outil("Remettre des mots", () => { if (etat.niveauEffacement > 0) etat.niveauEffacement--; dessinerAppr(); });
+    outil("Lire le poème", () => lireTout(zone));
+    const pct = etat.niveauEffacement*20;
+    $("#score").innerHTML = '<span>Texte effacé à ' + pct + ' %</span><span class="jauge"><i style="width:'+pct+'%;background:var(--miel)"></i></span>';
+  }
+
+  else if (m === "initiales"){
+    rendrePoeme(zone, {pictos:true, etatMot:() => "initiale", revelerVers:true});
+    outil("Lire le poème", () => lireTout(zone), "plein");
+    outil("Tout montrer", () => rendrePoeme(zone, {pictos:true}));
+  }
+
+  else if (m === "recitation"){
+    rendrePoeme(zone, {pictos:true, coche:true, etatMot:() => "cache", revelerVers:true});
+    outil("Tout remasquer", () => dessinerAppr(), "plein");
+    outil("Écouter la correction", () => lireTout(zone));
+    const reels = etat.vers.filter(v => !v.strophe).length;
+    const su = Object.values(etat.acquis).filter(Boolean).length;
+    $("#score").innerHTML = '<span>Vers sus : ' + su + ' / ' + reels + '</span>' +
+      '<span class="jauge"><i style="width:' + Math.round(su/reels*100) + '%"></i></span>';
+    enregistrerSuivi();
+  }
+}
+
+/* ---------- palette d'images ---------- */
+let versEnCours = null;
+function ouvrirPalette(iv){
+  versEnCours = iv;
+  $("#versPicto").textContent = etat.vers[iv].texte;
+  const p = $("#palettePicto"); p.innerHTML = "";
+  PALETTE_EMOJI.forEach(e => {
+    const b = document.createElement("button"); b.textContent = e;
+    b.onclick = () => { etat.pictos[iv] = e; fermerPalette(); dessinerAppr(); };
+    p.appendChild(b);
+  });
+  $("#modalePicto").hidden = false;
+}
+function fermerPalette(){ $("#modalePicto").hidden = true; }
+$("#picFermer").onclick = fermerPalette;
+$("#picSuppr").onclick = () => { delete etat.pictos[versEnCours]; fermerPalette(); dessinerAppr(); };
+$("#modalePicto").onclick = e => { if (e.target.id === "modalePicto") fermerPalette(); };
+
+/* ---------- révisions espacées ---------- */
+const JOURS = [1,2,4,7,15];
+function cle(){ return "poesie:" + (etat.titre || "sans-titre"); }
+function chargerSuivi(){
+  const d = memoire.lire(cle());
+  if (d && d.revisions){ etat.revisions = d.revisions; etat.acquis = d.acquis || {}; etat.pictos = Object.assign(etat.pictos, d.pictos || {}); }
+  else {
+    const t = new Date();
+    etat.revisions = JOURS.map(j => { const d2 = new Date(t); d2.setDate(t.getDate()+j); return {jour:d2.toISOString().slice(0,10), fait:false}; });
+  }
+  dessinerRevisions();
+}
+function enregistrerSuivi(){
+  memoire.ecrire(cle(), {revisions:etat.revisions, acquis:etat.acquis, pictos:etat.pictos});
+  dessinerRevisions();
+}
+function dessinerRevisions(){
+  const z = $("#listeRevision"); z.innerHTML = "";
+  etat.revisions.forEach((r,i) => {
+    const d = new Date(r.jour + "T12:00:00");
+    const l = document.createElement("div"); l.className = "revision";
+    const t = document.createElement("span");
+    t.textContent = "Séance " + (i+1) + " · " + d.toLocaleDateString("fr-FR", {weekday:"long", day:"numeric", month:"long"});
+    const b = document.createElement("button");
+    b.className = "pastille" + (r.fait ? " ok" : "");
+    b.setAttribute("aria-label", "Séance " + (i+1) + " faite");
+    b.onclick = () => { r.fait = !r.fait; enregistrerSuivi(); };
+    l.append(t,b); z.appendChild(l);
+  });
+}
+
+/* ---------- démarrage ---------- */
+$("#vTaille").textContent = $("#taille").value;
+$$(".bascule").forEach(l => l.classList.toggle("on", !!l.querySelector("input:checked")));
+window.addEventListener("beforeunload", stopVoix);
+</script>
+</body>
+</html>
