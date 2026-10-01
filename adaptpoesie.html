@@ -148,9 +148,68 @@ textarea{width:100%;min-height:230px;padding:12px;border:1.5px solid #C6D2E8;bor
 .note{font-size:13px;color:var(--encre-doux);margin-top:10px}
 .err{background:#FDEDEF;border-left:4px solid var(--corail);padding:11px 13px;border-radius:0 10px 10px 0;font-size:14px;margin-top:10px}
 
+/* ---------- import façon Adaptalbum ---------- */
+.barre-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.faux-bouton{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;
+  padding:12px 18px;border-radius:12px;font-weight:650;font-size:16px;cursor:pointer;
+  border:1.5px solid var(--encre);background:var(--papier-2);color:var(--encre)}
+.faux-bouton.principal{background:var(--plume);border-color:var(--plume);color:#fff}
+.faux-bouton:focus-within{outline:3px solid var(--miel);outline-offset:2px}
+input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.compteur{font-size:14px;color:var(--encre-doux);margin-left:auto}
+.accueil{border:2px dashed #B9C7E2;border-radius:var(--rayon);padding:30px 20px;text-align:center;background:#FCFDFF}
+.accueil strong{display:block;font-size:17px;margin-bottom:8px}
+.accueil p{margin:0 auto 6px;max-width:46ch;font-size:14px;color:var(--encre-doux);line-height:1.55}
+.accueil.survol{border-color:var(--miel);background:#FFF9EC}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.grille:empty{display:none}
+.page{background:var(--papier-2);border:1px solid #DCE3F0;border-radius:var(--rayon);overflow:hidden}
+.vignette{aspect-ratio:1/1;background:#EDF1F8;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.vignette img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.numero{position:absolute;top:8px;left:8px;background:rgba(22,35,63,.85);color:#fff;font-size:12px;
+  padding:3px 9px;border-radius:999px}
+.outils{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#DCE3F0;border-top:1px solid #DCE3F0}
+.outils button{border:0;border-radius:0;background:var(--papier-2);padding:10px 0;min-height:46px;
+  font-size:17px;color:var(--encre-doux)}
+.outils button:hover{background:#EEF2FD;color:var(--plume)}
+.outils .suppr:hover{color:var(--corail)}
+.etat{font-size:14px;color:var(--encre-doux);min-height:1.2em;margin-top:10px}
+.etat.souci{color:var(--corail);font-weight:600}
+
+.editeur{position:fixed;inset:0;z-index:90;display:none;flex-direction:column;background:rgba(16,25,45,.97);
+  padding:14px;padding-top:calc(14px + env(safe-area-inset-top,0px));
+  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.editeur.ouvert{display:flex}
+.consigne-rognage{text-align:center;font-size:15px;color:#C8D7EE;margin:0 0 12px}
+.scene{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.cadre{position:relative;line-height:0;overflow:hidden;touch-action:none}
+.cadre img{display:block;max-width:100%;max-height:calc(100vh - 230px);user-select:none;-webkit-user-drag:none}
+.boite{position:absolute;border:2px solid var(--miel);cursor:move;box-shadow:0 0 0 9999px rgba(10,18,34,.66)}
+.poignee{position:absolute;width:58px;height:58px;margin:-16px 0 0 -16px;background:transparent;border:0;padding:0;touch-action:none}
+.poignee::after{content:'';position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;
+  background:var(--miel);border:3px solid #2A1C06;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.45)}
+.poignee.nw{left:0;top:0;cursor:nwse-resize}
+.poignee.ne{left:100%;top:0;margin-left:-42px;cursor:nesw-resize}
+.poignee.sw{left:0;top:100%;margin-top:-42px;cursor:nesw-resize}
+.poignee.se{left:100%;top:100%;margin:-42px 0 0 -42px;cursor:nwse-resize}
+.bord{position:absolute;background:transparent;border:0;padding:0;touch-action:none}
+.bord::after{content:'';position:absolute;background:var(--miel);border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.bord.n,.bord.s{left:0;width:100%;height:46px;cursor:ns-resize}
+.bord.n{top:0;margin-top:-14px}
+.bord.s{top:100%;margin-top:-32px}
+.bord.o,.bord.e{top:0;height:100%;width:46px;cursor:ew-resize}
+.bord.o{left:0;margin-left:-14px}
+.bord.e{left:100%;margin-left:-32px}
+.bord.n::after,.bord.s::after{left:38%;width:24%;height:6px;top:50%;margin-top:-3px}
+.bord.o::after,.bord.e::after{top:38%;height:24%;width:6px;left:50%;margin-left:-3px}
+.barre-editeur{display:flex;gap:10px;margin-top:14px}
+.barre-editeur button{flex:1;justify-content:center;min-height:50px;padding:12px;border-radius:12px;
+  border:1.5px solid #4A5C7E;background:#1E2C4A;color:#E7EDF8;font-weight:600;display:inline-flex;align-items:center}
+.barre-editeur button.principal{background:var(--miel);border-color:#B07D1C;color:#2A1C06}
+
 @media print{
   body{background:#fff;padding:0}
-  header,nav,.carte.nonimp,.b,.etapes,.consigne,.score,#carteRevision,.pastille{display:none!important}
+  header,nav,.carte.nonimp,.b,.etapes,.consigne,.score,#carteRevision,.pastille,.editeur,.barre-actions,.grille{display:none!important}
   main{max-width:none;padding:0}
   .carte{border:none;box-shadow:none;padding:0;margin:0}
   .poeme{border:none}
@@ -179,19 +238,46 @@ textarea{width:100%;min-height:230px;padding:12px;border:1.5px solid #C6D2E8;bor
 <section id="v-import">
   <div class="carte">
     <h2>D'où vient la poésie ?</h2>
-    <p class="aide">Photo du cahier, image, PDF, ou saisie directe. La reconnaissance de texte se fait sur l'appareil.</p>
-    <div class="depot">
-      <div class="rangee" style="justify-content:center">
-        <button class="b plein" id="btnPhoto">Prendre une photo</button>
-        <button class="b" id="btnFichier">Choisir une image ou un PDF</button>
-      </div>
-      <p>Puis on corrige le texte avant de continuer.</p>
-      <input type="file" id="fPhoto" accept="image/*" capture="environment" hidden>
-      <input type="file" id="fFichier" accept="image/*,application/pdf" hidden>
-      <img id="apercu" alt="Aperçu de la page importée">
-      <div class="barre" id="barre"><i></i></div>
-      <div id="etatOcr" class="note"></div>
+    <p class="aide">Photo du cahier, images ou PDF. Chaque page est cadrée à l'import, puis le texte est reconnu sur l'appareil.</p>
+    <div class="barre-actions">
+      <label class="faux-bouton principal" for="appareil">Prendre une photo</label>
+      <input type="file" id="appareil" accept="image/*" capture="environment" multiple>
+      <label class="faux-bouton" for="galerie">Ajouter des images</label>
+      <input type="file" id="galerie" accept="image/*" multiple>
+      <label class="faux-bouton" for="pdfIn">Ouvrir un PDF</label>
+      <input type="file" id="pdfIn" accept="application/pdf" multiple>
+      <button class="b fin" id="vider" disabled>Tout enlever</button>
+      <span class="compteur" id="compteur">aucune page</span>
     </div>
+
+    <div class="accueil" id="accueil">
+      <strong>Aucune page pour l'instant</strong>
+      <p>Photographiez la poésie, prenez-la dans la galerie, ou ouvrez un PDF déjà prêt. Chaque page se cadre au moment de l'import.</p>
+      <p>Ensuite, vous pouvez encore la faire pivoter, la rogner à nouveau ou la remettre dans l'ordre.</p>
+    </div>
+    <div class="grille" id="grille"></div>
+
+    <div class="reglages" style="margin-top:14px">
+      <div class="champ"><label for="decoupe">Mise en page à reconnaître</label>
+        <select id="decoupe">
+          <option value="6" selected>Poésie, vers courts</option>
+          <option value="3">Automatique</option>
+          <option value="4">Colonne de texte</option>
+        </select>
+      </div>
+      <div class="champ"><label for="nettoyage">Nettoyage de l'image</label>
+        <select id="nettoyage">
+          <option value="auto" selected>Automatique</option>
+          <option value="fort">Renforcé, photo pâle</option>
+          <option value="aucun">Aucun</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="rangee" style="margin-top:12px">
+      <button class="b plein" id="btnTexte" disabled>Reconnaître le texte</button>
+    </div>
+    <div class="etat" id="etatImport"></div>
   </div>
 
   <div class="carte">
@@ -297,6 +383,30 @@ textarea{width:100%;min-height:230px;padding:12px;border:1.5px solid #C6D2E8;bor
 </section>
 
 </main>
+
+<div class="editeur" id="editeur" role="dialog" aria-modal="true" aria-label="Rogner la page">
+  <p class="consigne-rognage" id="consigneRognage">Déplacez le cadre, tirez les coins pour ajuster.</p>
+  <div class="scene">
+    <div class="cadre" id="cadre">
+      <img id="imgEdit" alt="Page à rogner">
+      <div class="boite" id="boite">
+        <span class="bord n" data-c="n"></span>
+        <span class="bord s" data-c="s"></span>
+        <span class="bord o" data-c="w"></span>
+        <span class="bord e" data-c="e"></span>
+        <span class="poignee nw" data-c="nw"></span>
+        <span class="poignee ne" data-c="ne"></span>
+        <span class="poignee sw" data-c="sw"></span>
+        <span class="poignee se" data-c="se"></span>
+      </div>
+    </div>
+  </div>
+  <div class="barre-editeur">
+    <button id="annulerRognage">Annuler</button>
+    <button id="toutPrendre">Toute la photo</button>
+    <button class="principal" id="validerRognage">Rogner</button>
+  </div>
+</div>
 
 <div class="modale" id="modalePicto" hidden>
   <div class="boite">
@@ -410,104 +520,432 @@ function syllabes(mot){
   return sorties.filter(Boolean);
 }
 
-/* ================= IMPORT & RECONNAISSANCE DE TEXTE ================= */
-const barre = $("#barre"), jaugeOcr = barre.querySelector("i"), etatOcr = $("#etatOcr");
-function progresse(p, texte){
-  barre.style.display = "block"; jaugeOcr.style.width = Math.round(p*100) + "%";
-  etatOcr.textContent = texte || "";
-}
-function messageErreur(t){ etatOcr.innerHTML = '<div class="err">' + t + '</div>'; barre.style.display = "none"; }
+/* ================= IMPORT, CADRAGE ET RECONNAISSANCE (module d'Adaptalbum) ================= */
+const pages = [];
+const grille = $("#grille"), accueil = $("#accueil"), compteur = $("#compteur");
+const zoneEtat = $("#etatImport"), btnPages = $("#vider"), btnTexte = $("#btnTexte");
 
-$("#btnPhoto").onclick = () => $("#fPhoto").click();
-$("#btnFichier").onclick = () => $("#fFichier").click();
-$("#fPhoto").onchange = e => traiterFichier(e.target.files[0]);
-$("#fFichier").onchange = e => traiterFichier(e.target.files[0]);
+function message(txt, souci){ zoneEtat.textContent = txt || ""; zoneEtat.classList.toggle("souci", !!souci); }
 
-async function traiterFichier(f){
-  if (!f) return;
-  etatOcr.textContent = ""; 
-  try {
-    let canvas;
-    if (f.type === "application/pdf"){
-      if (!window.pdfjsLib) return messageErreur("Le lecteur de PDF n'a pas pu se charger. Connecte l'appareil au Wi-Fi une fois, ou tape le texte à la main plus bas.");
-      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-      progresse(.1, "Ouverture du PDF…");
-      const pdf = await pdfjsLib.getDocument({data: await f.arrayBuffer()}).promise;
-      const page = await pdf.getPage(1);
-      // du texte déjà présent dans le PDF ? on évite l'OCR
-      const contenu = await page.getTextContent();
-      const direct = contenu.items.map(i => i.str).join(" ").trim();
-      const vue = page.getViewport({scale: 2});
-      canvas = document.createElement("canvas");
-      canvas.width = vue.width; canvas.height = vue.height;
-      await page.render({canvasContext: canvas.getContext("2d"), viewport: vue}).promise;
-      montrerApercu(canvas.toDataURL("image/jpeg", .85));
-      if (direct.length > 40){
-        let lignes = [];
-        let y = null, ligne = "";
-        for (const it of contenu.items){
-          const ny = Math.round(it.transform[5]);
-          if (y !== null && Math.abs(ny - y) > 4){ lignes.push(ligne.trim()); ligne = ""; }
-          ligne += it.str; y = ny;
-        }
-        lignes.push(ligne.trim());
-        deposerTexte(lignes.join("\n"));
-        progresse(1, "Texte extrait du PDF.");
-        return;
-      }
-    } else {
-      canvas = await imageVersCanvas(f);
-      montrerApercu(canvas.toDataURL("image/jpeg", .85));
-    }
-    if (!window.Tesseract) return messageErreur("La reconnaissance de texte n'a pas pu se charger. Connecte l'appareil au Wi-Fi une fois (les fichiers restent ensuite en cache), ou tape le texte à la main plus bas.");
-    progresse(.15, "Lecture de l'image… (la première fois, il faut du Wi-Fi)");
-    const res = await Tesseract.recognize(canvas, "fra", {
-      logger: m => { if (m.status === "recognizing text") progresse(.2 + m.progress*.8, "Lecture de l'image… " + Math.round(m.progress*100) + " %"); }
-    });
-    deposerTexte(res.data.text);
-    progresse(1, "Texte reconnu. Corrige-le si besoin : un vers par ligne.");
-  } catch(err){
-    messageErreur("La lecture a échoué (" + (err.message || err) + "). Tu peux taper ou coller le texte directement.");
+function ajouterFichiers(liste){
+  const tout = [...liste];
+  const pdfs   = tout.filter(f => f.type === "application/pdf" || /\.pdf$/i.test(f.name));
+  const images = tout.filter(f => f.type.startsWith("image/"));
+  if (!pdfs.length && !images.length){ message("Ce fichier n'est ni une image ni un PDF.", true); return; }
+  if (images.length){
+    const debut = pages.length;
+    images.forEach(f => pages.push({src:URL.createObjectURL(f), rot:0}));
+    dessiner();
+    const neuves = []; for (let i = debut; i < pages.length; i++) neuves.push(i);
+    lancerFileRognage(neuves);
   }
+  if (pdfs.length) importerPdfs(pdfs);
 }
 
-function imageVersCanvas(f){
-  return new Promise((ok, ko) => {
-    const img = new Image();
-    img.onload = () => {
-      const max = 1800, e = Math.min(1, max / Math.max(img.width, img.height));
-      const c = document.createElement("canvas");
-      c.width = img.width*e; c.height = img.height*e;
-      const x = c.getContext("2d");
-      x.drawImage(img, 0, 0, c.width, c.height);
-      // contraste renforcé : aide beaucoup sur une photo de cahier
-      const d = x.getImageData(0,0,c.width,c.height), p = d.data;
-      for (let i = 0; i < p.length; i += 4){
-        const g = .3*p[i] + .59*p[i+1] + .11*p[i+2];
-        const v = g < 120 ? 0 : g > 175 ? 255 : (g-120)*255/55;
-        p[i] = p[i+1] = p[i+2] = v;
+async function importerPdfs(fichiers){
+  if (typeof pdfjsLib === "undefined"){
+    message("Le module de lecture des PDF n'a pas pu être chargé. Vérifiez la connexion internet.", true); return;
+  }
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  const morceaux = [], debutPdf = pages.length;
+  try{
+    for (const f of fichiers){
+      const doc = await pdfjsLib.getDocument({data: await f.arrayBuffer()}).promise;
+      for (let n = 1; n <= doc.numPages; n++){
+        message("PDF : page " + n + " sur " + doc.numPages + "…");
+        const page = await doc.getPage(n);
+        const vue1 = page.getViewport({scale:1});
+        const k = Math.min(3, Math.max(1, 1800/Math.max(vue1.width, vue1.height)));
+        const vue = page.getViewport({scale:k});
+        const cv = document.createElement("canvas");
+        cv.width = Math.round(vue.width); cv.height = Math.round(vue.height);
+        const ctx = cv.getContext("2d");
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, cv.width, cv.height);
+        await page.render({canvasContext:ctx, viewport:vue}).promise;
+        const blob = await new Promise(r => cv.toBlob(r, "image/jpeg", .9));
+        pages.push({src:URL.createObjectURL(blob), rot:0});
+        const tc = await page.getTextContent();
+        morceaux.push(tc.items.map(it => it.str + (it.hasEOL ? "\n" : "")).join(""));
+        dessiner();
       }
-      x.putImageData(d, 0, 0);
-      URL.revokeObjectURL(img.src); ok(c);
-    };
-    img.onerror = () => ko(new Error("image illisible"));
-    img.src = URL.createObjectURL(f);
+    }
+    const brut = nettoyerVers(morceaux.join("\n\n"));
+    if (brut.replace(/\s/g,"").length > 60){
+      deposerTexte(brut);
+      message("Texte du PDF récupéré directement, sans reconnaissance. Vérifiez les vers ci-dessous.");
+    } else {
+      const neuves = []; for (let i = debutPdf; i < pages.length; i++) neuves.push(i);
+      lancerFileRognage(neuves);
+    }
+  }catch(err){ message("Ce PDF n'a pas pu être ouvert : " + err.message, true); }
+}
+
+$("#appareil").addEventListener("change", e => { ajouterFichiers(e.target.files); e.target.value = ""; });
+$("#galerie").addEventListener("change",  e => { ajouterFichiers(e.target.files); e.target.value = ""; });
+$("#pdfIn").addEventListener("change",    e => { ajouterFichiers(e.target.files); e.target.value = ""; });
+
+["dragenter","dragover"].forEach(ev => accueil.addEventListener(ev, e => { e.preventDefault(); accueil.classList.add("survol"); }));
+["dragleave","drop"].forEach(ev => accueil.addEventListener(ev, e => { e.preventDefault(); accueil.classList.remove("survol"); }));
+accueil.addEventListener("drop", e => ajouterFichiers(e.dataTransfer.files));
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", e => { e.preventDefault(); if (e.dataTransfer.files.length) ajouterFichiers(e.dataTransfer.files); });
+
+function dessiner(){
+  grille.innerHTML = "";
+  pages.forEach((p, i) => {
+    const carte = document.createElement("div");
+    carte.className = "page";
+    carte.innerHTML =
+      '<div class="vignette"><span class="numero">' + (i+1) + '</span>' +
+      '<img src="' + p.src + '" alt="Page ' + (i+1) + '" style="transform:rotate(' + p.rot + 'deg)"></div>' +
+      '<div class="outils">' +
+      '<button data-a="gauche" title="Pivoter vers la gauche" aria-label="Pivoter la page ' + (i+1) + ' vers la gauche">↺</button>' +
+      '<button data-a="droite" title="Pivoter vers la droite" aria-label="Pivoter la page ' + (i+1) + ' vers la droite">↻</button>' +
+      '<button data-a="rogner" title="Rogner la page" aria-label="Rogner la page ' + (i+1) + '">⛶</button>' +
+      '<button data-a="avant" title="Reculer d\'une place" aria-label="Reculer la page ' + (i+1) + '">←</button>' +
+      '<button data-a="apres" title="Avancer d\'une place" aria-label="Avancer la page ' + (i+1) + '">→</button>' +
+      '<button data-a="suppr" class="suppr" title="Enlever la page" aria-label="Enlever la page ' + (i+1) + '">✕</button>' +
+      '</div>';
+    carte.querySelectorAll("button").forEach(b => b.addEventListener("click", () => agir(b.dataset.a, i)));
+    grille.appendChild(carte);
+  });
+  const n = pages.length;
+  accueil.style.display = n ? "none" : "block";
+  compteur.textContent = n ? (n + (n > 1 ? " pages" : " page")) : "aucune page";
+  btnPages.disabled = !n;
+  btnTexte.disabled = !n;
+}
+
+function agir(action, i){
+  if (action === "rogner"){ ouvrirRognage(i); return; }
+  if (action === "gauche") pages[i].rot = (pages[i].rot + 270) % 360;
+  if (action === "droite") pages[i].rot = (pages[i].rot + 90) % 360;
+  if (action === "avant" && i > 0)               [pages[i-1], pages[i]] = [pages[i], pages[i-1]];
+  if (action === "apres" && i < pages.length-1)  [pages[i+1], pages[i]] = [pages[i], pages[i+1]];
+  if (action === "suppr"){ URL.revokeObjectURL(pages[i].src); pages.splice(i,1); }
+  dessiner();
+}
+
+btnPages.addEventListener("click", () => {
+  if (!confirm("Enlever toutes les pages ?")) return;
+  pages.forEach(p => URL.revokeObjectURL(p.src));
+  pages.length = 0; message(""); dessiner();
+});
+
+function charger(src){
+  return new Promise((ok, ko) => {
+    const im = new Image();
+    im.onload = () => ok(im);
+    im.onerror = () => ko(new Error("image illisible"));
+    im.src = src;
   });
 }
-function montrerApercu(url){ const a = $("#apercu"); a.src = url; a.style.display = "block"; }
 
+/* ---------- Rognage ---------- */
+const editeur = $("#editeur"), cadre = $("#cadre"), imgEdit = $("#imgEdit"), boite = $("#boite");
+let editIndex = -1, editCanvas = null, cb = {l:0,t:0,r:1,b:1}, prise = null;
+let fileRognage = [], enFile = false;
+
+function dessinerBoite(){
+  boite.style.left   = (cb.l*100) + "%";
+  boite.style.top    = (cb.t*100) + "%";
+  boite.style.width  = ((cb.r-cb.l)*100) + "%";
+  boite.style.height = ((cb.b-cb.t)*100) + "%";
+}
+function lancerFileRognage(indices){ fileRognage = indices.slice(); enFile = true; suivantRognage(); }
+function suivantRognage(){
+  if (!fileRognage.length){
+    enFile = false; fermerRognage(); dessiner();
+    message("Cadrage terminé. Appuyez sur « Reconnaître le texte ».");
+    return;
+  }
+  ouvrirRognage(fileRognage.shift());
+}
+function libellesRognage(){
+  const reste = fileRognage.length;
+  $("#annulerRognage").textContent = enFile ? "Garder telle quelle" : "Annuler";
+  $("#validerRognage").textContent = enFile && reste ? "Rogner et suivante" : "Rogner";
+  $("#consigneRognage").textContent = enFile
+    ? "Cadrez au plus près du poème" + (reste ? " — encore " + (reste+1) + " pages" : " — dernière page")
+    : "Déplacez le cadre, tirez les coins pour ajuster.";
+}
+async function ouvrirRognage(i){
+  const p = pages[i];
+  message("Préparation de l'image…");
+  try{
+    const im = await charger(p.src);
+    const pivot = (p.rot === 90 || p.rot === 270);
+    const lR = pivot ? im.naturalHeight : im.naturalWidth;
+    const hR = pivot ? im.naturalWidth  : im.naturalHeight;
+    const k  = Math.min(1, 2400/Math.max(lR, hR));
+    const cl = Math.max(1, Math.round(lR*k)), ch = Math.max(1, Math.round(hR*k));
+    const cv = document.createElement("canvas");
+    cv.width = cl; cv.height = ch;
+    const ctx = cv.getContext("2d");
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, cl, ch);
+    ctx.translate(cl/2, ch/2);
+    ctx.rotate(p.rot*Math.PI/180);
+    const dl = pivot ? ch : cl, dh = pivot ? cl : ch;
+    ctx.drawImage(im, -dl/2, -dh/2, dl, dh);
+    editCanvas = cv; editIndex = i;
+    imgEdit.src = cv.toDataURL("image/jpeg", .95);
+    cb = {l:.04, t:.04, r:.96, b:.96};
+    dessinerBoite(); libellesRognage();
+    editeur.classList.add("ouvert");
+    message("");
+  }catch(err){ message("Cette image n'a pas pu être ouverte.", true); }
+}
+function fermerRognage(){
+  editeur.classList.remove("ouvert");
+  imgEdit.removeAttribute("src");
+  editCanvas = null; editIndex = -1; prise = null;
+}
+function position(e){
+  const r = cadre.getBoundingClientRect();
+  return {x:(e.clientX - r.left)/r.width, y:(e.clientY - r.top)/r.height};
+}
+const borne = (v, min, max) => Math.min(max, Math.max(min, v));
+function debutPrise(e, coin){
+  e.preventDefault();
+  prise = {coin, depart:position(e), avant:{...cb}};
+  if (e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId);
+}
+boite.addEventListener("pointerdown", e => { if (e.target === boite) debutPrise(e, "move"); });
+boite.querySelectorAll(".poignee, .bord").forEach(h =>
+  h.addEventListener("pointerdown", e => { e.stopPropagation(); debutPrise(e, h.dataset.c); }));
+window.addEventListener("pointermove", e => {
+  if (!prise) return;
+  e.preventDefault();
+  const p = position(e), a = prise.avant, MIN = .1;
+  const dx = p.x - prise.depart.x, dy = p.y - prise.depart.y;
+  if (prise.coin === "move"){
+    const l = borne(a.l + dx, 0, 1 - (a.r - a.l));
+    const t = borne(a.t + dy, 0, 1 - (a.b - a.t));
+    cb = {l, t, r:l + (a.r - a.l), b:t + (a.b - a.t)};
+  } else {
+    const c = prise.coin; cb = {...a};
+    if (c.includes("w")) cb.l = borne(a.l + dx, 0, a.r - MIN);
+    if (c.includes("e")) cb.r = borne(a.r + dx, a.l + MIN, 1);
+    if (c.includes("n")) cb.t = borne(a.t + dy, 0, a.b - MIN);
+    if (c.includes("s")) cb.b = borne(a.b + dy, a.t + MIN, 1);
+  }
+  dessinerBoite();
+}, {passive:false});
+window.addEventListener("pointerup", () => { prise = null; });
+window.addEventListener("pointercancel", () => { prise = null; });
+
+$("#toutPrendre").addEventListener("click", () => { cb = {l:0,t:0,r:1,b:1}; dessinerBoite(); });
+$("#annulerRognage").addEventListener("click", () => { if (enFile) suivantRognage(); else fermerRognage(); });
+$("#validerRognage").addEventListener("click", () => {
+  const cv = editCanvas, i = editIndex;
+  if (!cv) return;
+  const sx = Math.round(cb.l*cv.width), sy = Math.round(cb.t*cv.height);
+  const sl = Math.max(1, Math.round((cb.r-cb.l)*cv.width));
+  const sh = Math.max(1, Math.round((cb.b-cb.t)*cv.height));
+  const out = document.createElement("canvas");
+  out.width = sl; out.height = sh;
+  out.getContext("2d").drawImage(cv, sx, sy, sl, sh, 0, 0, sl, sh);
+  out.toBlob(blob => {
+    if (!blob){ message("Le rognage n'a pas abouti.", true); return; }
+    const p = pages[i];
+    URL.revokeObjectURL(p.src);
+    p.src = URL.createObjectURL(blob); p.rot = 0;
+    fermerRognage(); dessiner();
+    if (enFile){ suivantRognage(); return; }
+    message("Page " + (i+1) + " rognée");
+  }, "image/jpeg", .94);
+});
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (editeur.classList.contains("ouvert")){ if (enFile) suivantRognage(); else fermerRognage(); }
+  else if (!$("#modalePicto").hidden) fermerPalette();
+});
+
+/* ---------- Préparation de l'image avant reconnaissance ---------- */
+function toile(w, h){
+  const c = document.createElement("canvas");
+  c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h));
+  return c;
+}
+function redim(cv, max){
+  const k = Math.min(1, max/Math.max(cv.width, cv.height));
+  if (k >= 1) return cv;
+  const o = toile(cv.width*k, cv.height*k);
+  const x = o.getContext("2d");
+  x.imageSmoothingQuality = "high";
+  x.drawImage(cv, 0, 0, o.width, o.height);
+  return o;
+}
+function tourner(cv, deg){
+  const a = deg*Math.PI/180;
+  const c = Math.abs(Math.cos(a)), s = Math.abs(Math.sin(a));
+  const o = toile(cv.width*c + cv.height*s, cv.width*s + cv.height*c);
+  const x = o.getContext("2d");
+  x.fillStyle = "#ffffff"; x.fillRect(0, 0, o.width, o.height);
+  x.translate(o.width/2, o.height/2); x.rotate(a);
+  x.drawImage(cv, -cv.width/2, -cv.height/2);
+  return o;
+}
+function detecterInclinaison(cv){
+  const petit = redim(cv, 600);
+  const w = petit.width, h = petit.height;
+  const d = petit.getContext("2d").getImageData(0, 0, w, h).data;
+  const g = new Uint8Array(w*h);
+  let moy = 0;
+  for (let i = 0, j = 0; i < d.length; i += 4, j++){
+    g[j] = (d[i]*.299 + d[i+1]*.587 + d[i+2]*.114) | 0; moy += g[j];
+  }
+  moy /= (w*h);
+  const seuil = moy*.85, noir = new Uint8Array(w*h);
+  let sombres = 0;
+  for (let j = 0; j < g.length; j++){ noir[j] = g[j] < seuil ? 1 : 0; sombres += noir[j]; }
+  if (sombres < w*h*.005) return 0;
+  let best = 0, bestV = -1;
+  for (let a = -6; a <= 6.0001; a += .25){
+    const t = Math.tan(a*Math.PI/180);
+    const dec = Math.ceil(Math.abs(t)*w) + 2;
+    const prof = new Float64Array(h + 2*dec);
+    for (let y = 0; y < h; y++)
+      for (let x = 0; x < w; x++)
+        if (noir[y*w+x]){
+          const yy = Math.round(y + (x - w/2)*t) + dec;
+          if (yy >= 0 && yy < prof.length) prof[yy]++;
+        }
+    let m = 0; for (const v of prof) m += v; m /= prof.length;
+    let va = 0; for (const v of prof) va += (v-m)*(v-m); va /= prof.length;
+    if (va > bestV){ bestV = va; best = a; }
+  }
+  return best;
+}
+function binariser(cv, k){
+  const w = cv.width, h = cv.height, ctx = cv.getContext("2d");
+  const im = ctx.getImageData(0, 0, w, h), d = im.data;
+  const g = new Uint8Array(w*h);
+  for (let i = 0, j = 0; i < d.length; i += 4, j++)
+    g[j] = (d[i]*.299 + d[i+1]*.587 + d[i+2]*.114) | 0;
+  const W = w + 1;
+  const s1 = new Float64Array(W*(h+1)), s2 = new Float64Array(W*(h+1));
+  for (let y = 0; y < h; y++){
+    let r1 = 0, r2 = 0;
+    for (let x = 0; x < w; x++){
+      const v = g[y*w+x]; r1 += v; r2 += v*v;
+      s1[(y+1)*W+x+1] = s1[y*W+x+1] + r1;
+      s2[(y+1)*W+x+1] = s2[y*W+x+1] + r2;
+    }
+  }
+  let f = Math.round(Math.min(w, h)/16);
+  if (f < 15) f = 15;
+  if (f % 2 === 0) f++;
+  const r = f >> 1, R = 128;
+  for (let y = 0; y < h; y++){
+    const y0 = Math.max(0, y-r), y1 = Math.min(h-1, y+r);
+    for (let x = 0; x < w; x++){
+      const x0 = Math.max(0, x-r), x1 = Math.min(w-1, x+r);
+      const n = (x1-x0+1)*(y1-y0+1);
+      const A = y0*W+x0, B = y0*W+x1+1, C = (y1+1)*W+x0, D = (y1+1)*W+x1+1;
+      const m  = (s1[D]-s1[B]-s1[C]+s1[A])/n;
+      const va = Math.max(0, (s2[D]-s2[B]-s2[C]+s2[A])/n - m*m);
+      const v = g[y*w+x] > m*(1 + k*(Math.sqrt(va)/R - 1)) ? 255 : 0;
+      const i4 = (y*w+x)*4;
+      d[i4] = d[i4+1] = d[i4+2] = v; d[i4+3] = 255;
+    }
+  }
+  ctx.putImageData(im, 0, 0);
+  return cv;
+}
+function preparerPourOcr(cv){
+  const mode = $("#nettoyage").value;
+  let c = redim(cv, 2000);
+  const a = detecterInclinaison(c);
+  if (Math.abs(a) > .25) c = tourner(c, a);
+  if (mode !== "aucun") c = binariser(c, mode === "fort" ? .30 : .16);
+  return c;
+}
+function rendreCanvas(im, rot, max){
+  const pivot = (rot === 90 || rot === 270);
+  const lR = pivot ? im.naturalHeight : im.naturalWidth;
+  const hR = pivot ? im.naturalWidth  : im.naturalHeight;
+  const k  = Math.min(1, max/Math.max(lR, hR));
+  const cl = Math.max(1, Math.round(lR*k)), ch = Math.max(1, Math.round(hR*k));
+  const cv = document.createElement("canvas");
+  cv.width = cl; cv.height = ch;
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, cl, ch);
+  ctx.translate(cl/2, ch/2);
+  ctx.rotate(rot*Math.PI/180);
+  const dl = pivot ? ch : cl, dh = pivot ? cl : ch;
+  ctx.drawImage(im, -dl/2, -dh/2, dl, dh);
+  return cv;
+}
+
+/* ---------- Reconnaissance : un vers par ligne ---------- */
+function nettoyerVers(t){
+  return t.split(/\r?\n/)
+    .map(l => l.replace(/[|_]+/g," ").replace(/[ \t]+/g," ").trim())
+    .join("\n")
+    .replace(/\n{3,}/g,"\n\n")
+    .trim();
+}
 function deposerTexte(t){
-  const lignes = t.split(/\r?\n/).map(l => l.replace(/[|_]+/g," ").replace(/\s+/g," ").trim());
-  $("#brut").value = lignes.join("\n").replace(/\n{3,}/g,"\n\n").trim();
+  $("#brut").value = nettoyerVers(t);
   devinerTitre();
 }
 function devinerTitre(){
   const l = $("#brut").value.split("\n").filter(Boolean);
-  if (l.length && !$("#titre").value) $("#titre").value = l[0].length < 45 ? l[0] : "";
+  if (l.length && !$("#titre").value && l[0].length < 45) $("#titre").value = l[0];
 }
 
-$("#btnVider").onclick = () => { $("#brut").value = ""; $("#titre").value = ""; $("#auteur").value = "";
-  $("#apercu").style.display = "none"; barre.style.display = "none"; etatOcr.textContent = ""; };
+btnTexte.addEventListener("click", async () => {
+  if (typeof Tesseract === "undefined"){
+    message("Le module de reconnaissance n'a pas pu être chargé. Connectez l'appareil au Wi-Fi une fois, ou tapez le texte à la main.", true);
+    return;
+  }
+  btnTexte.disabled = true;
+  message("Chargement du moteur de reconnaissance (quelques mégaoctets la première fois)…");
+  let worker = null;
+  try{
+    let numero = 1;
+    worker = await Tesseract.createWorker("fra", 1, {
+      logger: m => { if (m.status === "recognizing text")
+        message("Page " + numero + " sur " + pages.length + " : " + Math.round(m.progress*100) + " %"); }
+    });
+    await worker.setParameters({
+      tessedit_pageseg_mode: $("#decoupe").value,
+      preserve_interword_spaces: "1",
+      user_defined_dpi: "300"
+    });
+    const morceaux = [];
+    for (let i = 0; i < pages.length; i++){
+      numero = i + 1;
+      message("Préparation de la page " + numero + " sur " + pages.length + "…");
+      const im = await charger(pages[i].src);
+      const brut = rendreCanvas(im, pages[i].rot, 2400);
+      await new Promise(r => setTimeout(r, 0));
+      const propre = preparerPourOcr(brut);
+      message("Page " + numero + " sur " + pages.length + "…");
+      let {data:{text}} = await worker.recognize(propre);
+      if (text.replace(/\s/g,"").length < 12){
+        message("Page " + numero + " : nouvel essai sans nettoyage…");
+        const r2 = await worker.recognize(redim(brut, 2000));
+        if (r2.data.text.replace(/\s/g,"").length > text.replace(/\s/g,"").length) text = r2.data.text;
+      }
+      morceaux.push(text.trim());
+    }
+    await worker.terminate(); worker = null;
+    const texte = nettoyerVers(morceaux.filter(Boolean).join("\n\n"));
+    if (!texte) message("Aucun texte n'a été reconnu sur ces pages.", true);
+    else {
+      deposerTexte(texte);
+      message("Texte reconnu. Vérifiez les vers ci-dessous : un vers par ligne, une ligne vide entre deux strophes.");
+      $("#brut").scrollIntoView({block:"center", behavior:"smooth"});
+    }
+  }catch(err){
+    if (worker) try{ await worker.terminate(); }catch(e){}
+    message("La reconnaissance a échoué : " + err.message, true);
+  }
+  btnTexte.disabled = false;
+});
+
 $("#btnExemple").onclick = () => {
   $("#titre").value = "Le temps a laissé son manteau";
   $("#auteur").value = "Charles d'Orléans";
@@ -527,6 +965,8 @@ Gouttes d'argent d'orfèvrerie,
 Chacun s'habille de nouveau :
 Le temps a laissé son manteau.`;
 };
+$("#btnVider").onclick = () => { $("#brut").value = ""; $("#titre").value = ""; $("#auteur").value = ""; message(""); };
+dessiner();
 
 /* ================= VALIDATION DU TEXTE ================= */
 $("#btnValider").onclick = () => {
