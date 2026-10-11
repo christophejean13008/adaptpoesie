@@ -6,6 +6,18 @@
 <title>Adaptpoésie</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <style>
+  @font-face{
+    font-family:'OpenDyslexic';font-style:normal;font-weight:400;font-display:swap;
+    src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-400-normal.woff2) format('woff2'),
+        url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-400-normal.woff) format('woff');
+  }
+  @font-face{
+    font-family:'OpenDyslexic';font-style:normal;font-weight:700;font-display:swap;
+    src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-700-normal.woff2) format('woff2'),
+        url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-700-normal.woff) format('woff');
+  }
+</style>
+<style>
 :root{
   --papier:#F4F6FB;
   --papier-2:#FFFFFF;
@@ -303,10 +315,10 @@ input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events
     <div class="reglages">
       <div class="champ"><label for="police">Police</label>
         <select id="police">
+          <option value="'OpenDyslexic','Century Gothic',Verdana,sans-serif" selected>OpenDyslexic</option>
           <option value="Verdana,Geneva,sans-serif">Verdana</option>
           <option value="'Comic Sans MS','Chalkboard SE',cursive">Comic Sans / Chalkboard</option>
           <option value="'Andika','Luciole',Verdana,sans-serif">Andika / Luciole</option>
-          <option value="'OpenDyslexic','Century Gothic',Verdana,sans-serif">OpenDyslexic</option>
           <option value="Arial,Helvetica,sans-serif">Arial</option>
           <option value="Georgia,serif">Georgia (serif)</option>
         </select>
@@ -322,8 +334,8 @@ input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events
     </div>
     <div class="bascules">
       <label class="bascule"><input type="checkbox" id="opAlt"> Alterner la couleur des vers</label>
-      <label class="bascule"><input type="checkbox" id="opSyl"> Colorer les syllabes</label>
-      <label class="bascule"><input type="checkbox" id="opRegle"> Ligne sous chaque vers</label>
+      <label class="bascule"><input type="checkbox" id="opSyl" checked> Colorer les syllabes</label>
+      <label class="bascule"><input type="checkbox" id="opRegle" checked> Ligne sous chaque vers</label>
       <label class="bascule"><input type="checkbox" id="opNum"> Numéroter les vers</label>
     </div>
   </div>
